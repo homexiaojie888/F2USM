@@ -8,7 +8,7 @@ Java programming language.
 A simple way is to run the java test file.
 
 ## Benchmarks
-- The data format used is the same as in the file DB_Utility.txt
+- The data format used is the same as in the file q-sequence.txt, profit.txt
 
 ## Introduction
 This will be introduced later.

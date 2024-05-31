@@ -12,7 +12,6 @@ public class F2USM_Algo {
     protected long huspNum;
     protected long candidateNum;
     protected boolean isDebug;
-//    protected Map<String,Double> mapPattern2Util;
     protected Map<Integer,Integer> mapItem2Profit;
     protected boolean isWriteToFile;
     protected String output;
@@ -24,7 +23,6 @@ public class F2USM_Algo {
     protected BufferedWriter writer;
     ULinkList[] uLinkListDB;
     List<String> prefix;
-//    FuzzyItemComparator fuzzyItemComparator;
     protected class LastId {
         public double swu;
         public ULinkList uLinkList;
@@ -35,27 +33,7 @@ public class F2USM_Algo {
         }
     }
 
-    public F2USM_Algo(String profitFile) {
-        this.profitFile = profitFile;
-    }
 
-
-//    class FuzzyItemComparator implements Comparator<String> {
-//        // 实现 compare 方法来定义比较规则
-//        public int compare(String o1, String o2) {
-//            int dotpos =o1.indexOf(".");
-//            int item1=Integer.parseInt(o1.substring(0,dotpos));
-//            int region1=Integer.parseInt(o1.substring(dotpos+1));
-//            dotpos =o2.indexOf(".");
-//            int item2=Integer.parseInt(o2.substring(0,dotpos));
-//            int region2=Integer.parseInt(o2.substring(dotpos+1));
-//            int compare=Integer.compare(item1,item2);
-//            if (compare==0){
-//                compare=Integer.compare(region1,region2);
-//            }
-//            return compare;
-//        }
-//    }
     //初始化
     public F2USM_Algo(String pathname, String profitFile, double threshold, String output) throws IOException {
         this.pathname = pathname;
@@ -324,20 +302,6 @@ public class F2USM_Algo {
         MemoryLogger.getInstance().checkMemory();
     }
 
-
-    /**
-     * Write to file
-     */
-//    protected void writeToFile() throws IOException {
-////        Collections.sort(patterns);
-//        writer=new BufferedWriter(new FileWriter(output));
-//        for (String seq:mapPattern2Util.keySet()) {
-//            writer.write(seq+" : "+mapPattern2Util.get(seq));
-//            writer.newLine();
-//        }
-//        writer.flush();
-//    }
-
     /**
      * First USpan
      */
@@ -418,7 +382,7 @@ public class F2USM_Algo {
                  // PEU >= minUtility
                  if (Double.compare(PEU,minUtility)>=0){
                      prefix.add(addItem);
-                     runHUSPspan(newProjectULinkListDB);
+                     runF2USM(newProjectULinkListDB);
                      prefix.remove(prefix.size() - 1);
                  }
              }
@@ -430,11 +394,11 @@ public class F2USM_Algo {
 
 
     /**
-     * Run USpan algorithm
+     * Run  algorithm
      *
      * @param projectULinkListDB
      */
-    protected void runHUSPspan(ArrayList<ProjectULinkList> projectULinkListDB) throws IOException {
+    protected void runF2USM(ArrayList<ProjectULinkList> projectULinkListDB) throws IOException {
         //计算 （n+1）-sequence 的RSU
 
         Map<String, LastId> mapItemToRSU = new TreeMap<>(new Comparator<String>() {
@@ -961,7 +925,7 @@ public class F2USM_Algo {
                 }
                 if (Double.compare(PEU,minUtility) >= 0) {
                     prefix.add(addItem);
-                    runHUSPspan(newProjectULinkListDB);
+                    runF2USM(newProjectULinkListDB);
                     prefix.remove(prefix.size() - 1);
                 }
             }
@@ -1071,7 +1035,7 @@ public class F2USM_Algo {
                 if (Double.compare(PEU,minUtility) >= 0) {
                     prefix.add("-1");
                     prefix.add(addItem);
-                    runHUSPspan(newProjectULinkListDB);
+                    runF2USM(newProjectULinkListDB);
                     prefix.remove(prefix.size() - 1);
                     prefix.remove(prefix.size() - 1);
                 }
@@ -1079,26 +1043,6 @@ public class F2USM_Algo {
         }
     }
 
-    /**
-     *
-     * Example for check of S-Concatenation
-     * <[(3:25)], [(1:32) (2:18) (4:10) (5:8)], [(2:12) (3:40) (5:1)]> 146
-     * Pattern: 3 -1 2
-     * UPositions: (3:25), (3:40)
-     * For
-     * addItemInd = firstPosOfItemByName = (2:18)
-     *   UPosition = (3:25)
-     *   uPositionNextItemsetPos = [(1:32) (2:18) (4:10) (5:8)]
-     *   maxPositionUtility = 25
-     *   UPosition = (3:40)
-     *   uPositionNextItemsetPos = -1 -> break
-     * newUPosition = 25 + 18
-     * addItemInd = (2:12)
-     *   UPosition = (3:40)
-     *   uPositionNextItemsetPos = -1 -> break
-     * newUPosition = 25 + 12
-     * End
-     */
 
     /**
      * PEU
